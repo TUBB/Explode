@@ -1,0 +1,51 @@
+apply plugin: 'com.android.library'
+apply plugin: 'com.novoda.bintray-release'
+
+buildscript {
+    repositories {
+        jcenter {
+            url "http://jcenter.bintray.com/"
+        }
+    }
+    dependencies {
+        classpath 'com.novoda:bintray-release:0.8.0'
+    }
+}
+
+android {
+    compileSdkVersion project.compileSdkVersion
+    defaultConfig {
+        minSdkVersion project.minSdkVersion
+        targetSdkVersion project.targetSdkVersion
+        versionCode project.versionCode
+        versionName project.versionName
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "com.android.support:appcompat-v7:$project.appcompat7Version"
+    api "com.squareup.retrofit2:retrofit:$project.retrofitVersion"
+    api "com.squareup.okhttp3:okhttp:$project.okhttpVersion"
+    api "io.reactivex.rxjava2:rxandroid:$project.rxandroidVersion"
+    api "com.squareup.retrofit2:adapter-rxjava2:$project.retrofitRxjava2AdapterVersion"
+    api "org.ligboy.retrofit2:converter-fastjson-android:$project.retrofitFastjsonConverterVersion"
+}
+
+publish {
+    userOrg = 'tubb'
+    groupId = 'io.github.tubb'
+    artifactId = 'explode'
+    publishVersion = project.versionName
+    desc = '网络请求框架，提供统一可配置的网络请求接口'
+    website = 'https://github.com/TUBB/Explode'
+}
