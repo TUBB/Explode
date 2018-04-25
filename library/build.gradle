@@ -31,6 +31,10 @@ android {
 
 }
 
+tasks.withType(Javadoc) {
+    options.encoding = 'UTF-8'
+}
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "com.android.support:appcompat-v7:$project.appcompat7Version"

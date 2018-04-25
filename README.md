@@ -1,13 +1,15 @@
 # Explode
 
+
 网络请求框架，提供统一可配置的网络请求接口
 
 * 可配置Retrofit生成器，基于baseUrl和生成器id缓存Retrofit对象
 * 基于Retrofit注解来构建OkHttp3 Request
 * 基于OkHttp3拦截器，支持配置公共请求头
 * Cookie缓存策略可定制化
-* 支持OkHttp3 Http响应缓存
-* 请求可以根据需要取消
+* 支持配置OkHttp3 Http响应缓存
+* 请求可取消
+* 支持`RxJava.Observable`、`Retrofit.Call`和`OkHttp3.Request`作为执行体
 
 # Download
 
@@ -132,7 +134,7 @@ private void executeRxJava() {
 ```
 
 ## 取消请求
-离开当前Activity时有必要取消还未完成的网络请求，一个是避免Activity实例的泄漏，一个是节约网络IO资源
+离开当前Activity时有必要取消还未完成的网络请求，避免Activity实例的泄漏
 ```java
 @Override
 protected void onDestroy() {
@@ -143,7 +145,12 @@ protected void onDestroy() {
 
 # 自定义
 
-在初始化Explode时，可以提供ExplodeConfig对象，来配置一些自定义实现。现主要包含，调试log，Cookie的缓存策略，共有的请求Header，应用服务端设置的Http缓存头，网络的读、写和连接超时时间
+在初始化Explode时，可以提供ExplodeConfig对象，来配置一些自定义实现。现主要包含：
+- 调试期log
+- Cookie的缓存策略
+- 通用的请求Header
+- 应用服务端设置的Http缓存头
+- 网络的读、写和连接超时时间
 ```java
 Explode.init(new ExplodeConfig.Builder(this)
         // 调试阶段

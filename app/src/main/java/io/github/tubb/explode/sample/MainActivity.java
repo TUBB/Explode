@@ -27,7 +27,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         tvMsg = findViewById(R.id.tv_msg);
-        ExplodeRetrofit retrofit = Explode.instance().get("http://192.168.1.153:3000");
+        // 这里是测试地址，api项目可以查看https://github.com/TUBB/explode_api
+        ExplodeRetrofit retrofit = Explode.instance().get("http://192.168.1.103:3000");
         userService = retrofit.create(UserService.class);
         executeOkHttpRequest();
 //        executeCall();
