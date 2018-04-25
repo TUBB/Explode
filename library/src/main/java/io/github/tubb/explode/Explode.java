@@ -69,7 +69,7 @@ public final class Explode {
      * @param baseUrl 基础url
      * @return ExplodeRetrofit
      */
-    public synchronized ExplodeRetrofit get(@NonNull final String baseUrl) {
+    public ExplodeRetrofit get(@NonNull final String baseUrl) {
         checkOnMainThread("Please execute on main thread");
         return get(checkNotNull(baseUrl, "Base URL required."), mDefaultGenerator);
     }
@@ -80,7 +80,7 @@ public final class Explode {
      * @param generator 可定制化ExplodeRetrofit生成器
      * @return ExplodeRetrofit
      */
-    public synchronized ExplodeRetrofit get(@NonNull final String baseUrl,
+    public ExplodeRetrofit get(@NonNull final String baseUrl,
                                     @NonNull final ExplodeRetrofitGenerator generator) {
         checkNotNull(baseUrl, "Base URL required.");
         checkNotNull(generator, "generator == null");
@@ -113,7 +113,7 @@ public final class Explode {
         checkNotNull(converter, "converter == null");
         checkNotNull(callback, "callback == null");
         checkOnMainThread("Please execute on main thread");
-        final okhttp3.Call call = generator.buildClient().newCall(request);
+        final okhttp3.Call call = generator.getOkHttpClient().newCall(request);
         Observable<W> observable = Observable.create(new ObservableOnSubscribe<W>() {
             @Override
             public void subscribe(ObservableEmitter<W> e) throws Exception {
@@ -208,9 +208,7 @@ public final class Explode {
                         }
                     }
                 });
-        synchronized (this) {
-            httpCancelerMap.put(taskId, new HttpCanceler<>(disposable, callback));
-        }
+        httpCancelerMap.put(taskId, new HttpCanceler<>(disposable, callback));
         return taskId;
     }
 
@@ -226,9 +224,11 @@ public final class Explode {
     public void cancel(final long taskId) {
         checkOnMainThread("Please execute on main thread");
         HttpCanceler canceler = httpCancelerMap.get(taskId);
-        if (!isNull(canceler)) canceler.cancel();
+        if (!isNull(canceler))
+            canceler.cancel();
         else {
-            if (ExplodeLog.DEBUG) ExplodeLog.w("Can't find HttpCanceler for task id: " + taskId);
+            if (ExplodeLog.DEBUG)
+                ExplodeLog.w("Can't find HttpCanceler for task id: " + taskId);
         }
         httpCancelerMap.remove(taskId);
     }

@@ -17,17 +17,17 @@ public class TestExplodeRetrofitGenerator extends ExplodeRetrofitGenerator {
     }
 
     @Override
-    protected void configClientCookie(final String baseUrl) {
-        super.configClientCookie(baseUrl);
+    protected void configClientCookie() {
+        super.configClientCookie();
     }
 
     @Override
-    protected void configClientInterceptor(final String baseUrl) {
-        super.configClientInterceptor(baseUrl);
+    protected void configClientInterceptor() {
+        super.configClientInterceptor();
     }
 
     @Override
-    protected void configClientTimeout(final String baseUrl) {
-        super.configClientTimeout(baseUrl);
+    protected void configClientTimeout() {
+        super.configClientTimeout();
     }
 }
