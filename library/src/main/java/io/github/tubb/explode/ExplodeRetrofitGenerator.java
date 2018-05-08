@@ -8,6 +8,7 @@ import java.util.concurrent.TimeUnit;
 import okhttp3.Cookie;
 import okhttp3.CookieJar;
 import okhttp3.HttpUrl;
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.fastjson.FastJsonConverterFactory;
@@ -40,7 +41,14 @@ public abstract class ExplodeRetrofitGenerator {
     }
 
     protected void configClientInterceptor() {
-        clientBuilder.addInterceptor(new SharedHeadersInterceptor());
+        for (Interceptor interceptor :
+                explodeConfig.getOkHttpInterceptors()) {
+            clientBuilder.addInterceptor(interceptor);
+        }
+        for (Interceptor interceptor :
+                explodeConfig.getOkHttpNetworkInterceptors()) {
+            clientBuilder.addNetworkInterceptor(interceptor);
+        }
         if (explodeConfig.isDebug()) {
             clientBuilder.addNetworkInterceptor(new HttpLoggingInterceptor().setLevel(BODY));
         }

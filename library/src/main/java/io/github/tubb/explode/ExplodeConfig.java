@@ -6,6 +6,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import java.io.File;
+import java.util.ArrayList;
+
+import okhttp3.Interceptor;
 
 import static io.github.tubb.explode.CheckUtils.checkNotNull;
 import static io.github.tubb.explode.CheckUtils.isNull;
@@ -24,6 +27,8 @@ public final class ExplodeConfig {
     private long netWriteTimeout;
     private long netConnectTimeout;
     private OkHttpCacheProxy okHttpCacheProxy;
+    private ArrayList<Interceptor> okHttpInterceptors;
+    private ArrayList<Interceptor> okHttpNetworkInterceptors;
 
     private ExplodeConfig(Builder builder) {
         this.context = builder.context;
@@ -38,6 +43,8 @@ public final class ExplodeConfig {
         this.netWriteTimeout = builder.netWriteTimeout;
         this.netConnectTimeout = builder.netConnectTimeout;
         this.okHttpCacheProxy = builder.okHttpCacheProxy;
+        this.okHttpInterceptors = builder.okHttpInterceptors;
+        this.okHttpNetworkInterceptors = builder.okHttpNetworkInterceptors;
     }
 
     @NonNull
@@ -76,6 +83,16 @@ public final class ExplodeConfig {
         return okHttpCacheProxy;
     }
 
+    @NonNull
+    public ArrayList<Interceptor> getOkHttpInterceptors() {
+        return okHttpInterceptors;
+    }
+
+    @NonNull
+    public ArrayList<Interceptor> getOkHttpNetworkInterceptors() {
+        return okHttpNetworkInterceptors;
+    }
+
     public final static class Builder {
         private static final int READ_TIMEOUT = 60 * 1000;
         private static final int WRIT_TIMEOUT = 60 * 1000;
@@ -88,9 +105,14 @@ public final class ExplodeConfig {
         private long netWriteTimeout;
         private long netConnectTimeout;
         private OkHttpCacheProxy okHttpCacheProxy;
+        private ArrayList<Interceptor> okHttpInterceptors;
+        private ArrayList<Interceptor> okHttpNetworkInterceptors;
 
         public Builder(@NonNull Application application) {
             this.context = checkNotNull(application, "application == null");
+            this.okHttpInterceptors = new ArrayList<>(4);
+            this.okHttpInterceptors.add(new SharedHeadersInterceptor());
+            this.okHttpNetworkInterceptors = new ArrayList<>(4);
         }
 
         public Builder sharedHeadersProvider(@NonNull SharedHeadersProvider sharedHeadersProvider) {
@@ -123,12 +145,24 @@ public final class ExplodeConfig {
             return this;
         }
 
-        public Builder okHttpCache(File cacheDir, int cacheSize) {
+        public Builder okHttpCache(@NonNull File cacheDir, int cacheSize) {
             checkNotNull(cacheDir, "cacheDir == null");
             if (cacheSize <= 0) {
                 throw new IllegalArgumentException("cacheSize <= 0");
             }
             this.okHttpCacheProxy = new OkHttpCacheProxy(cacheDir, cacheSize);
+            return this;
+        }
+
+        public Builder addOkHttpInterceptor(@NonNull Interceptor interceptor) {
+            checkNotNull(interceptor, "interceptor == null");
+            this.okHttpInterceptors.add(interceptor);
+            return this;
+        }
+
+        public Builder addOkHttpNetworkInterceptor(@NonNull Interceptor interceptor) {
+            checkNotNull(interceptor, "interceptor == null");
+            this.okHttpNetworkInterceptors.add(interceptor);
             return this;
         }
 
