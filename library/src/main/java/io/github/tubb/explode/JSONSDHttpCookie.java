@@ -1,5 +1,7 @@
 package io.github.tubb.explode;
 
+import android.support.annotation.Nullable;
+
 import com.alibaba.fastjson.JSON;
 
 import okhttp3.Cookie;
@@ -27,6 +29,7 @@ final class JSONSDHttpCookie implements SDHttpCookie {
         return JSON.toJSONString(httpCookie);
     }
 
+    @Nullable
     @Override
     public Cookie des(String cookieStr) {
         if (isEmpty(cookieStr)) return null;

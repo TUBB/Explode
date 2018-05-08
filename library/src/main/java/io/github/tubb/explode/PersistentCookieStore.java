@@ -2,6 +2,7 @@ package io.github.tubb.explode;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
 import android.text.TextUtils;
 import java.util.ArrayList;
@@ -12,6 +13,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import okhttp3.Cookie;
 import okhttp3.HttpUrl;
+
+import static io.github.tubb.explode.CheckUtils.isNull;
 
 /**
  * Cookie disk store
@@ -36,13 +39,13 @@ class PersistentCookieStore {
         mCookies = new HashMap<>();
         Map<String, ?> prefsMap = mCookiePrefs.getAll();
         for (Map.Entry<String, ?> entry : prefsMap.entrySet()) {
-            if (null != entry.getValue() && !((String) entry.getValue()).startsWith(COOKIE_NAME_PREFIX)) {
+            if (!isNull(entry.getValue()) && !((String) entry.getValue()).startsWith(COOKIE_NAME_PREFIX)) {
                 String[] cookieNames = TextUtils.split((String) entry.getValue(), ",");
                 for (String name : cookieNames) {
                     String encodedCookie = mCookiePrefs.getString(COOKIE_NAME_PREFIX + name, null);
-                    if (encodedCookie != null) {
+                    if (!isNull(encodedCookie)) {
                         Cookie decodedCookie = desCookie(encodedCookie);
-                        if (decodedCookie != null) {
+                        if (!isNull(decodedCookie)) {
                             if (!mCookies.containsKey(entry.getKey()))
                                 mCookies.put(entry.getKey(), new ConcurrentHashMap<String, Cookie>());
                             mCookies.get(entry.getKey()).put(name, decodedCookie);
@@ -53,6 +56,7 @@ class PersistentCookieStore {
         }
     }
 
+    @Nullable
     private Cookie desCookie(String cookieStr) {
         return mSDHttpCookie.des(cookieStr);
     }
@@ -62,7 +66,7 @@ class PersistentCookieStore {
     }
 
     public void add(HttpUrl httpUrl, List<Cookie> cookies) {
-        if (null != cookies && cookies.size() > 0) {
+        if (!isNull(cookies) && cookies.size() > 0) {
             for (Cookie item : cookies) {
                 add(item);
             }

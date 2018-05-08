@@ -1,6 +1,7 @@
 package io.github.tubb.explode;
 
 import android.app.Application;
+import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.util.ArrayMap;
@@ -45,7 +46,9 @@ public final class Explode {
     /**
      * 初始化Explode
      * @param application Application
+     * @throws RuntimeException if execute not in main thread
      */
+    @MainThread
     public static void init(@NonNull Application application) {
         checkNotNull(application, "application == null");
         checkOnMainThread("Please execute on main thread");
@@ -56,7 +59,9 @@ public final class Explode {
     /**
      * 初始化Explode
      * @param config ExplodeConfig
+     * @throws RuntimeException if execute not in main thread
      */
+    @MainThread
     public static void init(@NonNull ExplodeConfig config) {
         checkNotNull(config, "config == null");
         checkOnMainThread("Please execute on main thread");
@@ -68,7 +73,9 @@ public final class Explode {
      * 根据base url获取ExplodeRetrofit，缓存中存在，直接拿，不重新创建
      * @param baseUrl 基础url
      * @return ExplodeRetrofit
+     * @throws RuntimeException if execute not in main thread
      */
+    @MainThread
     public ExplodeRetrofit get(@NonNull final String baseUrl) {
         checkOnMainThread("Please execute on main thread");
         return get(checkNotNull(baseUrl, "Base URL required."), mDefaultGenerator);
@@ -79,7 +86,9 @@ public final class Explode {
      * @param baseUrl 基础url
      * @param generator 可定制化ExplodeRetrofit生成器
      * @return ExplodeRetrofit
+     * @throws RuntimeException if execute not in main thread
      */
+    @MainThread
     public ExplodeRetrofit get(@NonNull final String baseUrl,
                                     @NonNull final ExplodeRetrofitGenerator generator) {
         checkNotNull(baseUrl, "Base URL required.");
@@ -103,7 +112,9 @@ public final class Explode {
      * @param <W> 服务端响应的数据
      * @param <D> 业务数据
      * @return 每一次执行都被当做是做一次任务，返回任务id
+     * @throws RuntimeException if execute not in main thread
      */
+    @MainThread
     public <W, D> long execute(@NonNull final Request request,
                                @NonNull final ExplodeRetrofitGenerator generator,
                                @NonNull final ResponseConverter<W> converter,
@@ -147,6 +158,7 @@ public final class Explode {
      * @param <D> 业务数据
      * @return 每一次执行都被当做是做一次任务，返回任务id
      */
+    @MainThread
     public <W, D> long execute(@NonNull final Request request,
                                @NonNull final ResponseConverter<W> converter,
                                @NonNull final HttpCallback<W, D> callback) {
@@ -160,7 +172,9 @@ public final class Explode {
      * @param <W> 服务端响应的数据
      * @param <D> 业务数据
      * @return 每一次执行都被当做是做一次任务，返回任务id
+     * @throws RuntimeException if execute not in main thread
      */
+    @MainThread
     public <W, D> long execute(@NonNull final Call<W> finalCall,
                                @NonNull final HttpCallback<W, D> callback) {
         checkNotNull(finalCall, "finalCall == null");
@@ -181,7 +195,9 @@ public final class Explode {
      * @param <W> 服务端响应的数据
      * @param <D> 业务数据
      * @return 每一次执行都被当做是做一次任务，返回任务id
+     * @throws RuntimeException if execute not in main thread
      */
+    @MainThread
     public <W, D> long execute(@NonNull final Observable<W> finalObservable,
                                @NonNull final HttpCallback<W, D> callback) {
         checkNotNull(finalObservable, "finalObservable == null");
@@ -221,6 +237,7 @@ public final class Explode {
      * 取消任务，业务层将得不到结果回调
      * @param taskId 任务id
      */
+    @MainThread
     public void cancel(final long taskId) {
         checkOnMainThread("Please execute on main thread");
         HttpCanceler canceler = httpCancelerMap.get(taskId);
