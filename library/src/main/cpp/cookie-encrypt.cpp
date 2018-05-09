@@ -2,13 +2,15 @@
 #include <string>
 #include <android/log.h>
 
-#define TAG    "Explode" // 这个是自定义的LOG的标识
-#define LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG,TAG,__VA_ARGS__) // 定义LOGD类型
+#define TAG    "Explode"
+#define LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG,TAG,__VA_ARGS__)
 
 const std::string KEY = "Opu@Tea%4*1";
 const std::string SIG = "(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;";
 const std::string AES_ENCRYPT_NAME = "aesEncrypt";
 const std::string AES_DECRYPT_NAME = "aesDecrypt";
+
+jstring callMethod(JNIEnv *env, jclass &clazz, jmethodID &methodId, jstring &handleStr);
 
 extern "C"
 JNIEXPORT jstring
@@ -19,11 +21,9 @@ Java_io_github_tubb_explode_CookieEncrypt_encrypt(
         jclass clazz,
         jstring originCookie) {
     jmethodID aesEncryptMethodID = env->GetStaticMethodID(clazz, AES_ENCRYPT_NAME.c_str(), SIG.c_str());
-    jstring data = (jstring)env->CallStaticObjectMethod(clazz, aesEncryptMethodID, originCookie, env->NewStringUTF(KEY.c_str()));
-    return data;
+    return callMethod(env, clazz, aesEncryptMethodID, originCookie);
 }
 
-extern "C"
 JNIEXPORT jstring
 
 JNICALL
@@ -32,6 +32,14 @@ Java_io_github_tubb_explode_CookieEncrypt_decrypt(
         jclass clazz,
         jstring encryptedCookie) {
     jmethodID aesDecryptMethodID = env->GetStaticMethodID(clazz, AES_DECRYPT_NAME.c_str(), SIG.c_str());
-    jstring data = (jstring)env->CallStaticObjectMethod(clazz, aesDecryptMethodID, encryptedCookie, env->NewStringUTF(KEY.c_str()));
+    return callMethod(env, clazz, aesDecryptMethodID, encryptedCookie);
+}
+
+jstring callMethod(JNIEnv *env, jclass &clazz, jmethodID &methodId, jstring &handleStr) {
+    const char *key_chars = KEY.c_str();
+    jstring key = env->NewStringUTF(key_chars);
+    jstring data = (jstring)env->CallStaticObjectMethod(clazz, methodId, handleStr, key);
+    jboolean isCopy;
+    env->ReleaseStringUTFChars(key, env->GetStringUTFChars(key, &isCopy));
     return data;
 }
