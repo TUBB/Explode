@@ -5,7 +5,7 @@
 #define TAG    "Explode" // 这个是自定义的LOG的标识
 #define LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG,TAG,__VA_ARGS__) // 定义LOGD类型
 
-const std::string KEY = "wfklakfka";
+const std::string KEY = "Opu@Tea%4*1";
 const std::string SIG = "(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;";
 const std::string AES_ENCRYPT_NAME = "aesEncrypt";
 const std::string AES_DECRYPT_NAME = "aesDecrypt";
