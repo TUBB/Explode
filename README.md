@@ -14,7 +14,7 @@
 # Download
 
 ```groovy
-implementation 'io.github.tubb:explode:0.0.2'
+implementation 'io.github.tubb:explode:0.0.3'
 ```
 
 # Usage
