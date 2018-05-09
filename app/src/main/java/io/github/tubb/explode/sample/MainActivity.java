@@ -33,8 +33,6 @@ public class MainActivity extends AppCompatActivity {
         // 这里是测试地址，api项目可以查看https://github.com/TUBB/explode_api
         ExplodeRetrofit retrofit = Explode.instance().get("http://10.0.2.177:3000");
         userService = retrofit.create(UserService.class);
-        executeOkHttpRequest();
-//        executeCall();
         executeRxJava();
     }
 

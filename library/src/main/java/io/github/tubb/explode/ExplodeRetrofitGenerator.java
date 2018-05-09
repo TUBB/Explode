@@ -34,13 +34,13 @@ public abstract class ExplodeRetrofitGenerator {
         explodeRetrofitBuilder = new ExplodeRetrofit.Builder();
     }
 
-    protected void configClientTimeout() {
+    private void configClientTimeout() {
         clientBuilder.readTimeout(explodeConfig.getNetReadTimeout(), TimeUnit.MILLISECONDS)
                 .writeTimeout(explodeConfig.getNetWriteTimeout(), TimeUnit.MILLISECONDS)
                 .connectTimeout(explodeConfig.getNetConnectTimeout(), TimeUnit.MILLISECONDS);
     }
 
-    protected void configClientInterceptor() {
+    private void configClientInterceptor() {
         for (Interceptor interceptor :
                 explodeConfig.getOkHttpInterceptors()) {
             clientBuilder.addInterceptor(interceptor);
@@ -54,7 +54,7 @@ public abstract class ExplodeRetrofitGenerator {
         }
     }
 
-    protected void configClientCookie() {
+    private void configClientCookie() {
         final CookieStrategy cookieStrategy = explodeConfig.getCookieStrategy();
         if (!isNull(cookieStrategy)) {
             clientBuilder.cookieJar(new CookieJar() {
@@ -71,13 +71,13 @@ public abstract class ExplodeRetrofitGenerator {
         }
     }
 
-    protected void configOkHttpCache() {
+    private void configOkHttpCache() {
         OkHttpCacheProxy okHttpCacheProxy = Explode.instance().getConfig().getOkHttpCacheProxy();
         if (!isNull(okHttpCacheProxy))
             clientBuilder.cache(okHttpCacheProxy.cache);
     }
 
-    protected void configRetrofit(final String baseUrl) {
+    private void configRetrofit(final String baseUrl) {
         explodeRetrofitBuilder.baseUrl(baseUrl)
                 .client(buildClient())
                 .addConverterFactory(FastJsonConverterFactory.create())
@@ -85,20 +85,26 @@ public abstract class ExplodeRetrofitGenerator {
     }
 
     @NonNull protected ExplodeRetrofit get(@NonNull String baseUrl) {
-        configClientTimeout();
-        configClientInterceptor();
-        configClientCookie();
-        configOkHttpCache();
+        configOkHttpClient();
         configRetrofit(baseUrl);
         return buildExplodeRetrofit();
     }
 
-    protected ExplodeRetrofit buildExplodeRetrofit() {
+    private void configOkHttpClient() {
+        if (isNull(okHttpClient)) {
+            configClientTimeout();
+            configClientInterceptor();
+            configClientCookie();
+            configOkHttpCache();
+        }
+    }
+
+    private ExplodeRetrofit buildExplodeRetrofit() {
         return explodeRetrofitBuilder.build();
     }
 
-    protected OkHttpClient buildClient() {
-        return clientBuilder.build();
+    private OkHttpClient buildClient() {
+        return isNull(okHttpClient) ? okHttpClient = clientBuilder.build() : okHttpClient;
     }
 
     /**
@@ -106,14 +112,8 @@ public abstract class ExplodeRetrofitGenerator {
      * @return OkHttpClient
      */
     OkHttpClient getOkHttpClient() {
-        if (isNull(okHttpClient)) {
-            configClientTimeout();
-            configClientInterceptor();
-            configClientCookie();
-            configOkHttpCache();
-            okHttpClient = buildClient();
-        }
-        return okHttpClient;
+        configOkHttpClient();
+        return buildClient();
     }
 
     @NonNull protected String id() {

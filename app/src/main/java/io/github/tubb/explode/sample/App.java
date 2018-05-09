@@ -23,7 +23,7 @@ public class App extends Application {
                 // 对Cookie应用memory缓存策略
                 //.cookieStrategy(new MemoryCookieStrategy())
                 // 只会对get请求应用服务器端设置的缓存头，5M大小
-                .okHttpCache(getExternalCacheDir(), 5 * 1024 * 1024)
+                .okHttpCache(getCacheDir(), 5 * 1024 * 1024)
                 .sharedHeadersProvider(new TestSharedHeadersProvider())
                 .netConnectTimeout(60 * 1000)
                 .netReadTimeout(60 * 1000)

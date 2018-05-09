@@ -10,24 +10,14 @@ import io.github.tubb.explode.ExplodeRetrofitGenerator;
  */
 
 public class TestExplodeRetrofitGenerator extends ExplodeRetrofitGenerator {
+
+    TestExplodeRetrofitGenerator() {
+        super();
+    }
+
     @NonNull
     @Override
-    protected ExplodeRetrofit get(@NonNull String baseUrl) {
-        return super.get(baseUrl);
-    }
-
-    @Override
-    protected void configClientCookie() {
-        super.configClientCookie();
-    }
-
-    @Override
-    protected void configClientInterceptor() {
-        super.configClientInterceptor();
-    }
-
-    @Override
-    protected void configClientTimeout() {
-        super.configClientTimeout();
+    protected String id() {
+        return "test";
     }
 }
