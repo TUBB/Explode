@@ -20,6 +20,12 @@ android {
         versionCode project.versionCode
         versionName project.versionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        externalNativeBuild {
+            cmake {
+                // Sets a flag to enable format macro constants for the C++ compiler.
+                cppFlags ""
+            }
+        }
     }
 
     buildTypes {
@@ -29,6 +35,11 @@ android {
         }
     }
 
+    externalNativeBuild {
+        cmake {
+            path 'CMakeLists.txt'
+        }
+    }
 }
 
 tasks.withType(Javadoc) {
@@ -43,6 +54,7 @@ dependencies {
     api "io.reactivex.rxjava2:rxandroid:$project.rxandroidVersion"
     api "com.squareup.retrofit2:adapter-rxjava2:$project.retrofitRxjava2AdapterVersion"
     api "org.ligboy.retrofit2:converter-fastjson-android:$project.retrofitFastjsonConverterVersion"
+    api "com.getkeepsafe.relinker:relinker:$project.relinkerVersion"
 }
 
 publish {

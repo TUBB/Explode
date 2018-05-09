@@ -6,6 +6,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.util.ArrayMap;
 
+import com.getkeepsafe.relinker.ReLinker;
+
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
@@ -52,8 +54,7 @@ public final class Explode {
     public static void init(@NonNull Application application) {
         checkNotNull(application, "application == null");
         checkOnMainThread("Please execute on main thread");
-        INSTANCE.config = new ExplodeConfig.Builder(application).build();
-        INSTANCE.mDefaultGenerator = new DefaultExplodeRetrofitGenerator();
+        setUp(new ExplodeConfig.Builder(application).build());
     }
 
     /**
@@ -65,7 +66,13 @@ public final class Explode {
     public static void init(@NonNull ExplodeConfig config) {
         checkNotNull(config, "config == null");
         checkOnMainThread("Please execute on main thread");
+        setUp(config);
+    }
+
+    private static void setUp(ExplodeConfig config) {
+        ReLinker.loadLibrary(config.getContext(), "cookie-encrypt");
         INSTANCE.config = config;
+        ExplodeLog.setDebug(INSTANCE.config.isDebug());
         INSTANCE.mDefaultGenerator = new DefaultExplodeRetrofitGenerator();
     }
 

@@ -2,11 +2,14 @@ package io.github.tubb.explode.sample;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
+
+import io.github.tubb.explode.CookieEncrypt;
 import io.github.tubb.explode.Explode;
 import io.github.tubb.explode.ExplodeRetrofit;
 import io.github.tubb.explode.ResponseConverter;
@@ -28,11 +31,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         tvMsg = findViewById(R.id.tv_msg);
         // 这里是测试地址，api项目可以查看https://github.com/TUBB/explode_api
-        ExplodeRetrofit retrofit = Explode.instance().get("http://192.168.1.103:3000");
+        ExplodeRetrofit retrofit = Explode.instance().get("http://10.0.2.177:3000");
         userService = retrofit.create(UserService.class);
         executeOkHttpRequest();
 //        executeCall();
-//        executeRxJava()
+        executeRxJava();
     }
 
     private void executeRxJava() {

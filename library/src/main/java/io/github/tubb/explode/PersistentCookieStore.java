@@ -2,9 +2,11 @@ package io.github.tubb.explode;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
 import android.text.TextUtils;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -57,8 +59,9 @@ class PersistentCookieStore {
     }
 
     @Nullable
-    private Cookie desCookie(String cookieStr) {
-        return mSDHttpCookie.des(cookieStr);
+    private Cookie desCookie(@NonNull String cookieStr) {
+        String origin = CookieEncrypt.decrypt(cookieStr);
+        return mSDHttpCookie.des(origin);
     }
 
     protected String getCookieToken(Cookie cookie) {
@@ -90,8 +93,10 @@ class PersistentCookieStore {
         prefsWriter.apply();
     }
 
-    private String serCookie(Cookie cookie) {
-        return mSDHttpCookie.ser(cookie);
+    @NonNull
+    private String serCookie(@NonNull Cookie cookie) {
+        String origin = mSDHttpCookie.ser(cookie);
+        return isNull(origin) ? "" : CookieEncrypt.encrypt(origin);
     }
 
     public List<Cookie> get(HttpUrl uri) {

@@ -35,6 +35,7 @@ allprojects {
         retrofitRxjava2AdapterVersion = '2.3.0'
         retrofitFastjsonConverterVersion = '2.1.0'
         okhttp3LoggingInterceptorVersion = '3.9.0'
+        relinkerVersion = '1.2.3'
     }
 }
 
