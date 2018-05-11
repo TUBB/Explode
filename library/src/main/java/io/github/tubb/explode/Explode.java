@@ -70,10 +70,22 @@ public final class Explode {
     }
 
     private static void setUp(ExplodeConfig config) {
-        ReLinker.loadLibrary(config.getContext(), "cookie-encrypt");
+//        ReLinker.loadLibrary(config.getContext(), "cookie-encrypt");
+        System.loadLibrary("cookie-encrypt");
         INSTANCE.config = config;
         ExplodeLog.setDebug(INSTANCE.config.isDebug());
         INSTANCE.mDefaultGenerator = new DefaultExplodeRetrofitGenerator();
+    }
+
+    /**
+     * 获取ExplodeRetrofit，缓存中存在，直接拿，不重新创建
+     * @return ExplodeRetrofit
+     * @throws RuntimeException if execute not in main thread
+     */
+    @MainThread
+    public ExplodeRetrofit get() {
+        checkOnMainThread("Please execute on main thread");
+        return get(checkNotNull(config.getBaseUrl(), "Base URL required, please config the base URL!"), mDefaultGenerator);
     }
 
     /**
@@ -86,6 +98,18 @@ public final class Explode {
     public ExplodeRetrofit get(@NonNull final String baseUrl) {
         checkOnMainThread("Please execute on main thread");
         return get(checkNotNull(baseUrl, "Base URL required."), mDefaultGenerator);
+    }
+
+    /**
+     * 根据ExplodeRetrofitGenerator获取ExplodeRetrofit，缓存中存在，直接拿，不重新创建
+     * @param generator 可定制化ExplodeRetrofit生成器
+     * @return ExplodeRetrofit
+     * @throws RuntimeException if execute not in main thread
+     */
+    @MainThread
+    public ExplodeRetrofit get(@NonNull final ExplodeRetrofitGenerator generator) {
+        checkOnMainThread("Please execute on main thread");
+        return get(checkNotNull(config.getBaseUrl(), "Base URL required, please config the base URL!"), generator);
     }
 
     /**

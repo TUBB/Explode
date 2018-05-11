@@ -1,9 +1,5 @@
 #include <jni.h>
 #include <string>
-#include <android/log.h>
-
-#define TAG    "Explode"
-#define LOGD(...)  __android_log_print(ANDROID_LOG_DEBUG,TAG,__VA_ARGS__)
 
 const std::string KEY = "Opu@Tea%4*1";
 const std::string SIG = "(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;";

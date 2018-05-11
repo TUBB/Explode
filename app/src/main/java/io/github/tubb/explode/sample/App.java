@@ -18,6 +18,7 @@ public class App extends Application {
         Explode.init(new ExplodeConfig.Builder(this)
                 // 调试阶段
                 .debug(true)
+                .baseUrl("http://10.0.2.177:3000")
                 // 对Cookie应用磁盘缓存策略
                 .cookieStrategy(new DiskCookieStrategy(this))
                 // 对Cookie应用memory缓存策略

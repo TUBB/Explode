@@ -22,13 +22,14 @@ public final class ExplodeConfig {
     private Context context;
     private SharedHeadersProvider sharedHeadersProvider;
     private CookieStrategy cookieStrategy;
-    private boolean debug = false;
+    private boolean debug;
     private long netReadTimeout;
     private long netWriteTimeout;
     private long netConnectTimeout;
     private OkHttpCacheProxy okHttpCacheProxy;
     private ArrayList<Interceptor> okHttpInterceptors;
     private ArrayList<Interceptor> okHttpNetworkInterceptors;
+    private String baseUrl;
 
     private ExplodeConfig(Builder builder) {
         this.context = builder.context;
@@ -45,6 +46,7 @@ public final class ExplodeConfig {
         this.okHttpCacheProxy = builder.okHttpCacheProxy;
         this.okHttpInterceptors = builder.okHttpInterceptors;
         this.okHttpNetworkInterceptors = builder.okHttpNetworkInterceptors;
+        this.baseUrl = builder.baseUrl;
     }
 
     @NonNull
@@ -93,6 +95,11 @@ public final class ExplodeConfig {
         return okHttpNetworkInterceptors;
     }
 
+    @Nullable
+    public String getBaseUrl() {
+        return baseUrl;
+    }
+
     public final static class Builder {
         private static final int READ_TIMEOUT = 60 * 1000;
         private static final int WRIT_TIMEOUT = 60 * 1000;
@@ -107,12 +114,18 @@ public final class ExplodeConfig {
         private OkHttpCacheProxy okHttpCacheProxy;
         private ArrayList<Interceptor> okHttpInterceptors;
         private ArrayList<Interceptor> okHttpNetworkInterceptors;
+        private String baseUrl;
 
         public Builder(@NonNull Application application) {
             this.context = checkNotNull(application, "application == null");
             this.okHttpInterceptors = new ArrayList<>(4);
             this.okHttpInterceptors.add(new SharedHeadersInterceptor());
             this.okHttpNetworkInterceptors = new ArrayList<>(4);
+        }
+
+        public Builder baseUrl(String baseUrl) {
+            this.baseUrl = checkNotNull(baseUrl, "baseUrl == null");
+            return this;
         }
 
         public Builder sharedHeadersProvider(@NonNull SharedHeadersProvider sharedHeadersProvider) {
