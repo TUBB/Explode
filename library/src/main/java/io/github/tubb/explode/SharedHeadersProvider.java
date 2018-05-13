@@ -1,5 +1,6 @@
 package io.github.tubb.explode;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.util.ArrayMap;
@@ -11,5 +12,5 @@ import android.support.v4.util.ArrayMap;
 
 public interface SharedHeadersProvider {
     @Nullable
-    ArrayMap<String, String> provide(@NonNull String url);
+    ArrayMap<String, String> provide(@NonNull Context context, @NonNull String url);
 }

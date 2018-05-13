@@ -1,5 +1,6 @@
 package io.github.tubb.explode.sample;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.util.ArrayMap;
@@ -15,7 +16,7 @@ import io.github.tubb.explode.SharedHeadersProvider;
 class TestSharedHeadersProvider implements SharedHeadersProvider {
     @Nullable
     @Override
-    public ArrayMap<String, String> provide(@NonNull String url) {
+    public ArrayMap<String, String> provide(@NonNull Context context, @NonNull String url) {
         ArrayMap<String, String> headers = new ArrayMap<>();
         headers.put("User-Agent", String.format("explode_%s/Android", BuildConfig.VERSION_NAME));
         headers.put("Token", "12345678998");

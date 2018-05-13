@@ -11,7 +11,6 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 import static io.github.tubb.explode.CheckUtils.isEmpty;
-import static io.github.tubb.explode.CheckUtils.isNull;
 
 /**
  * Shared http headers for okhttp3
@@ -23,10 +22,10 @@ final class SharedHeadersInterceptor implements Interceptor {
     public Response intercept(@NonNull Chain chain) throws IOException {
         Request originRequest = chain.request();
         String url = originRequest.url().toString();
-        ArrayMap<String, String> sharedHeaders = Explode.instance()
-                .getConfig()
-                .getSharedHeadersProvider()
-                .provide(url);
+        ExplodeConfig config = Explode.instance().getConfig();
+        ArrayMap<String, String> sharedHeaders =
+                config.getSharedHeadersProvider()
+                .provide(config.getContext(), url);
         Request.Builder builder = originRequest.newBuilder();
         if (!isEmpty(sharedHeaders)) {
             for (Entry<String, String> header : sharedHeaders.entrySet()){
