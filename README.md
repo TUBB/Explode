@@ -1,7 +1,7 @@
 # Explode
 
 
-网络请求框架，提供统一可配置的网络请求接口
+网络请求库，提供统一可配置的网络请求接口
 
 * 可配置Retrofit生成器，基于baseUrl和生成器id缓存Retrofit对象
 * 基于Retrofit注解来构建OkHttp3 Request
@@ -68,7 +68,7 @@ public final class HttpResult<D> {
 
 ## 实现HttpCallback接口
 
-由于各种APP的业务不尽相同，针对响应数据的处理要基于具体的业务，所以框架没有提供具体的实现，只是定义了业务方要实现的接口。要根据自己APP的特点来实现HttpCallback接口，下面给出一个简单的实现
+由于各种APP的业务不尽相同，针对响应数据的处理要基于具体的业务，所以`Explode`没有提供具体的实现，只是定义了业务方要实现的接口。要根据自己APP的特点来实现HttpCallback接口，下面给出一个简单的实现
 ```java
 public abstract class ExplodeHttpCallback<D> implements HttpCallback<HttpResult<D>, D> {
 
@@ -112,7 +112,7 @@ public abstract class ExplodeHttpCallback<D> implements HttpCallback<HttpResult<
 
 ## 执行具体的请求
 
-Explode接受三种对象作为执行体，`RxJava.Observable`、`Retrofit.Call`和`OkHttp3.Request`，比较常用的可能是`RxJava.Observable`，示例如下：
+`Explode`接受三种对象作为执行体，`RxJava.Observable`、`Retrofit.Call`和`OkHttp3.Request`，比较常用的可能是`RxJava.Observable`，示例如下：
 ```java
 private void executeRxJava() {
     fetchUsersTaskId = Explode.instance().execute(userService.users(), new ExplodeHttpCallback<ArrayList<User>>() {
@@ -145,7 +145,7 @@ protected void onDestroy() {
 
 # 自定义
 
-在初始化Explode时，可以提供ExplodeConfig对象，来配置一些自定义实现。现主要包含：
+在初始化`Explode`时，可以提供ExplodeConfig对象，来配置一些自定义实现。现主要包含：
 - 调试期log
 - Cookie的缓存策略
 - 通用的请求Header
